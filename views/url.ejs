@@ -1,0 +1,31 @@
+<% include partials/header %>
+<div class="container">
+<h1 class="title has-text-centered">
+    URL Shortener
+</h1>
+<div class="has-text-centered">
+    <form class="form" action="/api/shorturl" method="post">
+        <div class="field">
+            <label for="" class="label">URL:</label>
+            <div class="control has-text-centered">
+                <input id="url-input" class="input" type="text" name="url" placeholder="https://example.com">
+            </div>
+        </div>
+        <div class="field">
+            <p class="control has-text-centered">
+                <button class="button is-large is-primary">
+                    Submit
+                </button>
+            </p>
+        </div>
+    </form>
+    <hr>
+    <p class="content is-size-5">
+        <strong>POST: </strong>  <em> /api/shorturl</em>
+    </p>
+    <p class="content is-size-5">
+        <strong>GET: </strong>   <em> /api/shorturl/:shortenedURL</em>
+    </p>
+</div>
+</div>
+<% include partials/footer %>

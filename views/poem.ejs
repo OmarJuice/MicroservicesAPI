@@ -1,0 +1,41 @@
+<% include partials/header %>
+<div class="container">
+<h1 class="title has-text-centered">
+    Poem Generator
+</h1>
+<div class="has-text-centered">
+    <form class="form" action="/api/poem" method="post">
+        <div class="field">
+            <label for="" class="label">Text:</label>
+            <div class="control has-text-centered">
+                <textarea id="poem-text" rows="10" cols="40" class="input" name="poem[text]" placeholder="Text to generate poem from goes here." required></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label for="" class="label">Number of lines:</label>
+            <div class="control has-text-centered">
+                <input class="input" type="number" name="poem[numLines]" value="5" min="1" max="25">
+            </div>
+        </div>
+        <div class="field">
+            <label for="" class="label">Max words per line:</label>
+            <div class="control has-text-centered">
+                <input class="input" type="number" name="poem[wpl]" value="10" min="2" max="15">
+            </div>
+        </div>
+        <div class="field">
+            <p class="control has-text-centered">
+                <button class="button is-large is-primary">
+                    Generate
+                </button>
+            </p>
+        </div>
+    </form>
+    <hr>
+    <p class="content is-size-5">
+        <strong>POST: </strong>  <em> /api/poem</em>
+    </p>
+ 
+</div>
+</div>
+<% include partials/footer %>

@@ -1,0 +1,16 @@
+body, html{
+    background-color: rgba(100, 50, 230, .3);
+    height: 100%;
+    width: 100%;
+}
+.input{
+    width: 33%
+}
+#poem-text{
+    width: auto;
+    height: auto
+}
+.box{
+    background-color: lavender;
+ 
+}
