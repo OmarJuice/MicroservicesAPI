@@ -3,6 +3,7 @@ const router = express.Router();
 const URL = require('../models/url');
 const dns = require('dns');
 
+
 router.get('/shorturl', function (req, res) {
     res.render('url')
 })
@@ -11,8 +12,9 @@ router.post('/api/shorturl', function (req, res) {
     let Json = {};
     dns.lookup(req.body.url, (err) => {
         if (err) {
+            console.log(err);
             Json.error = "Not a valid URL."
-            return res.json(Json);
+            return res.json(err);
         } else {
             URL.findOne({ "original": req.body.url }, (err, data) => {
                 if (err) {

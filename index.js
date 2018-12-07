@@ -17,6 +17,10 @@ const parserRoutes = require('./routes/parser');
 const poemRoutes = require('./routes/poem')
 const weatherRoutes = require('./routes/weather')
 
+
+
+
+
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
