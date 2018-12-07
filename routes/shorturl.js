@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const URL = require('../models/url');
 const dns = require('dns');
+const isURL = require('is-url');
 
 
 router.get('/shorturl', function (req, res) {
@@ -10,42 +11,43 @@ router.get('/shorturl', function (req, res) {
 
 router.post('/api/shorturl', function (req, res) {
     let Json = {};
-    dns.lookup(req.body.url, (err) => {
+
+    if(!isURL(req.body.url)){
+        return res.json({
+            "error": "Not a valid URL"
+        })
+    }
+        
+    URL.findOne({ "original": req.body.url }, (err, data) => {
         if (err) {
             console.log(err);
-            Json.error = "Not a valid URL."
-            return res.json(err);
         } else {
-            URL.findOne({ "original": req.body.url }, (err, data) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    if (!data) {
-                        URL.findOne({}).sort("-shortened").exec((err, num) => {
+            if (!data) {
+                URL.findOne({}).sort("-shortened").exec((err, num) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        let newNum = num.shortened + 1;
+                        URL.create({ "shortened": newNum, "original": req.body.url }, (err, newURL) => {
                             if (err) {
                                 console.log(err);
                             } else {
-                                let newNum = num.shortened + 1;
-                                URL.create({ "shortened": newNum, "original": req.body.url }, (err, newURL) => {
-                                    if (err) {
-                                        console.log(err);
-                                    } else {
-                                        Json.original = req.body.url;
-                                        Json.shortened = newNum
-                                        res.json(Json)
-                                    }
-                                })
+                                Json.original = req.body.url;
+                                Json.shortened = newNum
+                                res.json(Json)
                             }
                         })
-                    } else {
-                        Json.original = data.original;
-                        Json.shortened = data.shortened;
-                        res.json(Json)
                     }
-                }
-            })
+                })
+            } else {
+                Json.original = data.original;
+                Json.shortened = data.shortened;
+                res.json(Json)
+            }
         }
     })
+
+
 })
 router.get('/api/shorturl/:num', function (req, res) {
 
