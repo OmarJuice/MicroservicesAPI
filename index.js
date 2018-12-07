@@ -15,7 +15,7 @@ const timeRoutes = require('./routes/timestamp');
 const shortUrlRoutes = require('./routes/shorturl');
 const parserRoutes = require('./routes/parser');
 const poemRoutes = require('./routes/poem')
-
+const weatherRoutes = require('./routes/weather')
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,6 +31,7 @@ app.use(timeRoutes);
 app.use(shortUrlRoutes);
 app.use(parserRoutes);
 app.use(poemRoutes);
+app.use(weatherRoutes);
 
 app.listen(3000, function(){
     console.log('Server init')

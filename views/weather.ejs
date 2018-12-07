@@ -1,0 +1,23 @@
+<% include partials/header %>
+
+<div class="container">
+<h1 class="title has-text-centered">
+    Weather
+</h1>
+<div class="has-text-centered">
+    
+    <hr>
+    <p class="content is-size-5">
+        <strong>GET: </strong>  <em> <a href="/api/weather/New York">/api/weather/{location string}</a></em>
+    </p>
+   <p class="content">
+        Returns JSON with the current weather conditions of the given location.
+   </p>
+   <p class="content is-size-7">
+        Powered by <a href="https://darksky.net/dev">DarkSky</a> weather API
+        <br>
+        And <a href="https://www.mapbox.com/">MapBox</a>.
+   </p>
+</div>
+</div>
+<% include partials/footer %>
