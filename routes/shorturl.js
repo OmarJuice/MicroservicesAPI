@@ -34,7 +34,7 @@ router.post('/api/shorturl', function (req, res) {
                             } else {
                                 Json.original = req.body.url;
                                 Json.shortened = newNum
-                                res.json(Json)
+                                return res.json(Json)
                             }
                         })
                     }
@@ -42,7 +42,7 @@ router.post('/api/shorturl', function (req, res) {
             } else {
                 Json.original = data.original;
                 Json.shortened = data.shortened;
-                res.json(Json)
+                return res.json(Json)
             }
         }
     })
