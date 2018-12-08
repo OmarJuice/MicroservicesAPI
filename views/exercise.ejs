@@ -1,6 +1,6 @@
 <% include partials/header %>
 
-<div class="container">
+
 <h1 class="title has-text-centered">
     Exercise Tracker
 </h1>
@@ -14,7 +14,7 @@
         </div>
         <div class="field">
             <p class="control has-text-centered">
-                <button class="button is-large is-primary">
+                <button class="button is-small is-primary">
                     Submit
                 </button>
             </p>
@@ -47,7 +47,7 @@
         </div>
         <div class="field">
             <p class="control has-text-centered">
-                <button class="button is-large is-primary">
+                <button class="button is-small is-primary">
                     Submit
                 </button>
             </p>
@@ -56,15 +56,16 @@
     <hr>
     <p class="content is-size-5">
         <strong>POST:(User) </strong>  <em> /api/exercise/new-user</em>
-        <strong>| POST:(Exercise) </strong>  <em> /api/exercise/add</em>
-    </p>
-    <p class="content is-size-5">
+        <br>
+        <strong>POST:(Exercise) </strong>  <em> /api/exercise/add</em>
+        <br>
         <strong>GET:(Users) </strong>   <em> <a href="/api/exercise/users">/api/exercise/users</a></em>
-        <strong>| GET:(Log) </strong>   <em> /api/exercise/log/?{userId}&(from)&(to)&(limit)</em>
+        <br>
+        <strong>GET:(Log) </strong>   <em> /api/exercise/log/?{userId}&(from)&(to)&(limit)</em>
         date format: yyyy-mm-dd
 
     </p>
 </div>
-</div>
+
 
 <% include partials/footer %>

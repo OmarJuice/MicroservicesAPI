@@ -1,16 +1,43 @@
-body, html{
-    background-color: rgba(100, 50, 230, .3);
+body,html{
+    background-image: url('/images/darkness/darkness.png');
     height: 100%;
     width: 100%;
+    font-family: 'Bungee', sans-serif;
+    filter: invert(100%)
 }
 .input{
-    width: 33%
+    width: 90%
+}
+
+p, .subtitle, .label, li{
+    font-family: "Kanit", sans-serif;
 }
 #poem-text{
     width: auto;
     height: auto
 }
-.box{
-    background-color: lavender;
- 
+#OJicon{
+    height: 100px;
+    width: auto;
+}
+.icon{
+    color: purple
+}
+li{
+    text-decoration: underline
+}
+.link:hover{
+    background-color: aqua
+}
+.blurred-box{
+     background: inherit;
+     border-radius: 2px;
+     overflow: hidden;
+     border-radius: 10px;
+     border: 3px outset #666699;
+     box-shadow: 0px 3px 10px black
+   }
+   
+.hero{
+    background: inherit;
 }
