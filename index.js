@@ -53,6 +53,10 @@ app.use(parserRoutes);
 app.use(poemRoutes);
 app.use(weatherRoutes);
 
+app.get(`/server/log/${process.env.LOG}`, function(req, res){
+    res.sendFile(__dirname + '/server.log')
+})
+
 app.listen(process.env.PORT, function(){
     console.log('Server init')
 })
