@@ -23,7 +23,7 @@ const weatherRoutes = require('./routes/weather')
 
 
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }).then(() =>{ console.log('Connected')}).catch((err) => console.log(err))
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,10 +41,14 @@ app.use((req, res, next) => {
             }
         })
         next();
+    }else{
+        next()
     }
+    
 })
 
 app.get('/', function (req, res) {
+    console.log('hi');
     res.render('index')
 })
 
