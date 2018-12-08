@@ -8,11 +8,9 @@ const generateUserId = () => {
     })
 }
 
-const errorJson = {
-    error: "There was an error"
-}
 
-router.get('/exercise', function(req, res){
+
+router.get('/exercise', function (req, res) {
     res.render('exercise')
 })
 router.post('/api/exercise/new-user', function (req, res) {
@@ -20,35 +18,36 @@ router.post('/api/exercise/new-user', function (req, res) {
     if (uName.length > 31) {
         return res.send('Username too long');
     }
-    User.findOne({ "username": uName }, function (err, data) {
-        if (err) {
-            return res.json(errorJson);
-        } else {
+    User.findOne({ "username": uName }).exec()
+        .then((data) => {
             if (data) {
-                return res.send("Username already taken")
+                throw new Error('Username already Taken')
             } else if (!data) {
-                User.create({ id: generateUserId(), username: uName, log: [] }, (err, data) => {
-                    if (err) {
-                        res.json(errorJson)
-                    } else {
-                        res.json({
-                            "id": data.id,
-                            "username": data.username,
-                        })
-                    }
-                })
+                return User.create({ id: generateUserId(), username: uName, log: [] })
             }
-        }
-    })
+        })
+        .then((newUser) => {
+            return res.json({
+                id: newUser.id,
+                username: newUser.username
+            })
+        })
+        .catch((error) => {
+            return res.json({
+                "error": error.message
+            })
+        })
 })
 router.get('/api/exercise/users', function (req, res) {
-    User.find({}).select("-_id -log").exec((err, data) => {
-        if (err) {
-            res.json(errorJson)
-        } else {
+    User.find({}).select("-_id -log").exec()
+        .then((data) => {
             res.json(data)
-        }
-    })
+        })
+        .catch((error) => {
+            res.json({
+                "error": error.message
+            })
+        })
 })
 router.post('/api/exercise/add', function (req, res) {
     let newLog = req.body.exercise;
@@ -57,50 +56,54 @@ router.post('/api/exercise/add', function (req, res) {
     } else {
         newLog.date = new Date(newLog.date).toString().substr(0, 15)
     };
-    User.findOne({ id: req.body.userId }, (err, user) => {
-        if (err) {
-            return res.json(errorJson)
-        } else {
-            user.log.push(newLog);
-            user.save((err, data) => {
-                if (err) {
-                    res.json(errorJson)
-                } else {
-                    const changedLog = function (data) {
-                        let newLog = data.log.map((item) => {
-                            let newItem = {};
-                            newItem.description = item.description;
-                            newItem.duration = item.duration
-                            newItem.date = item.date;
-                            return newItem
-                        })
-                        return newLog;
-                    }(data)
+    User.findOne({ id: req.body.userId }).exec()
+        .then((user) => {
+            if (!user) {
+                throw new Error("User not found.")
+            }
+            user.log.push(newLog)
+            return user.save()
+        })
+        .then((data) => {
+            const changedLog = function (data) {
+                let newLog = data.log.map((item) => {
+                    let newItem = {};
+                    newItem.description = item.description;
+                    newItem.duration = item.duration
+                    newItem.date = item.date;
+                    return newItem
+                })
+                return newLog;
+            }(data)
 
-                    res.json({
-                        "username": data.username,
-                        "id": data.id,
-                        "log": changedLog
-                    })
-                }
-            });
-
-        }
-    })
+            return res.json({
+                "username": data.username,
+                "id": data.id,
+                "log": changedLog
+            })
+        })
+        .catch((error) => {
+            res.json({
+                "error": error.message
+            })
+        })
 })
 router.get('/api/exercise/log', function (req, res) {
     let fromDate = req.query.from;
     let toDate = req.query.to;
     let limit = req.query.limit;
     if (!req.query.userId) {
-        res.send("User not specified")
-    } else {
-        User.findOne({ id: req.query.userId }, (err, data) => {
-            if (err) {
-                res.json({
-                    "error": "There was an error"
-                })
-            } else {
+        return res.json({
+            "error": "User not specified"
+        })
+    }
+
+    User.findOne({ id: req.query.userId }).exec()
+        .then((data) => {
+            if (!data) {
+                throw new Error("User not found")
+            }
+            {
                 let changedLog = function (data, from, to, limit) {
                     let newLog = data.log.map((item) => {
                         let newItem = {};
@@ -130,11 +133,10 @@ router.get('/api/exercise/log', function (req, res) {
                         }
                         return true
                     })
-                    if (!isNaN(Number(limit))) { 
-                        newLog = newLog.slice(0, limit) 
+                    if (!isNaN(Number(limit))) {
+                        newLog = newLog.slice(0, limit)
                     }
                     return newLog
-                    //routerly limit
                 }(data, fromDate, toDate, limit)
 
                 res.json({
@@ -144,8 +146,14 @@ router.get('/api/exercise/log', function (req, res) {
                     "log": changedLog
                 })
             }
+
         })
-    }
+        .catch((err) => {
+            res.json({
+                "error": err.message
+            })
+        })
+
 })
 
 module.exports = router;

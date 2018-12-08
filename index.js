@@ -7,6 +7,8 @@ const dns = require('dns');
 const multer = require('multer');
 const upload = multer();
 const dotenv = require('dotenv').config();
+const fs = require('fs');
+
 const User = require('./models/exercise');
 const URL = require('./models/url');
 const exerciseRoutes = require('./routes/exercise-tracker');
@@ -25,6 +27,19 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req,res,next) => {
+    let now = new Date().toString();
+    let log =
+     `-------------------------------------------------------
+    ${now}: ${req.method} ${req.url} | PARAMS: ${JSON.stringify(req.params,undefined, 2)} | BODY: ${JSON.stringify(req.body,undefined, 2)}`
+    fs.appendFile('server.log', log + '\n', (err) =>{
+        if(err){
+            console.log(err);
+        }
+    })
+    next();
+})
 
 app.get('/', function(req, res){
     res.render('index')
