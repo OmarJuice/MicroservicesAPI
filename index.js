@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     if (process.env.DATABASE != 'local') {
         let now = new Date().toString();
+        now=now.substr(0, 24)
         let log =
             `-------------------------------------------------------
     ${now}: ${req.method} ${req.url} | PARAMS: ${JSON.stringify(req.params, undefined, 2)} | BODY: ${JSON.stringify(req.body, undefined, 2)}`
