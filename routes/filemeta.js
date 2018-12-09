@@ -7,7 +7,9 @@ router.get('/filemeta', function(req, res){
     res.render('file')
 })
 router.post('/api/filemeta', upload.single('upfile'), function(req, res){
-    console.log('reached');
+    if(!req.file){
+        return res.status(400).send('No file uploaded')
+    }
     res.json({
         "name": req.file.originalname,
         "encoding": req.file.encoding,
