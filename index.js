@@ -11,10 +11,10 @@ const fs = require('fs');
 
 const env = process.env.NODE_ENV || 'development';
 let mongouri;
-if(env === 'development'){
-    mongouri = process.env.MONGO_URI
-}else if(env === 'test'){
+if(env === 'test'){
     mongouri = process.env.MONGO_URI_TEST
+}else{
+    mongouri = process.env.MONGO_URI
 }
 
 const User = require('./models/exercise');
