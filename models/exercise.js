@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
-
+const generateUserId = () => {
+    return 'xxxxxxxxx'.replace(/x/g, () => {
+        return (Math.random() * 36 | 0).toString(36)
+    })
+}
 const userSchema = new mongoose.Schema({
     id: String,
     username: String,
@@ -10,4 +14,6 @@ const userSchema = new mongoose.Schema({
         date: String
     }]
 })
-module.exports = mongoose.model('User', userSchema);
+const Exerciseuser = mongoose.model('Exerciseuser', userSchema);
+
+module.exports = {Exerciseuser, generateUserId}

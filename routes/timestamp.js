@@ -12,14 +12,14 @@ router.get('/api/timestamp/:date_string?', function (req, res) {
         requestDate = req.params.date_string;
     }
     let responseDate = new Date(requestDate);
-    let unix = Math.round((responseDate).getTime());
+    let unix = responseDate.getTime();
     let utc = responseDate.toUTCString()
     if (utc === "Invalid Date") {
-        res.json({
+        res.status(400).send({
             error: utc
         })
     } else {
-        res.json({
+        res.send({
             "unix": unix,
             "utc": utc
         })

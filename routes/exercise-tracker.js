@@ -1,13 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/exercise')
-
-const generateUserId = () => {
-    return 'xxxxxxxxx'.replace(/x/g, () => {
-        return (Math.random() * 36 | 0).toString(36)
-    })
-}
-
+const {Exerciseuser, generateUserId} = require('../models/exercise')
 
 
 router.get('/exercise', function (req, res) {
@@ -16,14 +9,14 @@ router.get('/exercise', function (req, res) {
 router.post('/api/exercise/new-user', function (req, res) {
     let uName = req.body.username;
     if (uName.length > 31) {
-        return res.send('Username too long');
+        return res.status(400).send('Username too long');
     }
-    User.findOne({ "username": uName }).exec()
+    Exerciseuser.findOne({ "username": uName }).exec()
         .then((data) => {
             if (data) {
                 throw new Error('Username already Taken')
             } else if (!data) {
-                return User.create({ id: generateUserId(), username: uName, log: [] })
+                return Exerciseuser.create({ id: generateUserId(), username: uName, log: [] })
             }
         })
         .then((newUser) => {
@@ -33,20 +26,18 @@ router.post('/api/exercise/new-user', function (req, res) {
             })
         })
         .catch((error) => {
-            return res.json({
+            return res.status(400).send({
                 "error": error.message
             })
         })
 })
 router.get('/api/exercise/users', function (req, res) {
-    User.find({}).select("-_id -log").exec()
+    Exerciseuser.find({}).select("-_id -log").exec()
         .then((data) => {
             res.json(data)
         })
         .catch((error) => {
-            res.json({
-                "error": error.message
-            })
+            res.status(404).send(error)
         })
 })
 router.post('/api/exercise/add', function (req, res) {
@@ -56,7 +47,7 @@ router.post('/api/exercise/add', function (req, res) {
     } else {
         newLog.date = new Date(newLog.date).toString().substr(0, 15)
     };
-    User.findOne({ id: req.body.userId }).exec()
+    Exerciseuser.findOne({ id: req.body.userId }).exec()
         .then((user) => {
             if (!user) {
                 throw new Error("User not found.")
@@ -93,12 +84,12 @@ router.get('/api/exercise/log', function (req, res) {
     let toDate = req.query.to;
     let limit = req.query.limit;
     if (!req.query.userId) {
-        return res.json({
+        return res.status(400).send({
             "error": "User not specified"
         })
     }
 
-    User.findOne({ id: req.query.userId }).exec()
+    Exerciseuser.findOne({ id: req.query.userId }).exec()
         .then((data) => {
             if (!data) {
                 throw new Error("User not found")
@@ -149,9 +140,7 @@ router.get('/api/exercise/log', function (req, res) {
 
         })
         .catch((err) => {
-            res.json({
-                "error": err.message
-            })
+            res.status(404).send(err)
         })
 
 })

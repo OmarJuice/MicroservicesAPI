@@ -9,6 +9,14 @@ const upload = multer();
 const dotenv = require('dotenv').config();
 const fs = require('fs');
 
+const env = process.env.NODE_ENV || 'development';
+let mongouri;
+if(env === 'development'){
+    mongouri = process.env.MONGO_URI
+}else if(env === 'test'){
+    mongouri = process.env.MONGO_URI_TEST
+}
+
 const User = require('./models/exercise');
 const URL = require('./models/url');
 const exerciseRoutes = require('./routes/exercise-tracker');
@@ -19,15 +27,17 @@ const parserRoutes = require('./routes/parser');
 const poemRoutes = require('./routes/poem')
 const weatherRoutes = require('./routes/weather')
 
+//NOTES-----=
+// send status numbers
 
 
 
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }).then(() =>{ console.log('Connected')}).catch((err) => console.log(err))
+mongoose.connect(mongouri, { useNewUrlParser: true }).then(() =>{ console.log('Connected')}).catch((err) => console.log(err))
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(bodyParser.json())
 app.use((req, res, next) => {
     if (process.env.DATABASE != 'local') {
         let now = new Date().toString();
@@ -66,3 +76,4 @@ app.get(`/server/log/${process.env.LOG}`, function (req, res) {
 app.listen(process.env.PORT, function () {
     console.log('Server init')
 })
+module.exports = {app}

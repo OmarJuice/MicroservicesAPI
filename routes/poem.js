@@ -106,6 +106,18 @@ router.get('/poem', function(req, res){
     res.render('poem')
 })
 router.post('/api/poem', function(req, res){
+    if(!req.body.poem){
+        return res.status(400).send('Poem parameter: "text" is required')
+    }
+    if(!req.body.poem.text){
+        return res.status(400).send('Text is required')
+    }
+    if(!req.body.poem.numLines){
+        req.body.poem.numLines = 5
+    }
+    if(!req.body.wpl){
+        req.body.wpl = 10
+    }
     let dict = new Dictionary();
     dict.learn(req.body.poem.text);
     let poem = new Poem(dict, req.body.poem.numLines, req.body.poem.wpl).create();
