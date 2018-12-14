@@ -7,15 +7,15 @@ const dotenv = require('dotenv');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
-router.get('/', function(req, res){
+router.get('/', function (req, res) {
     res.render('index')
 })
-router.get('/weather', function(req, res){
+router.get('/weather', function (req, res) {
     res.render('weather')
 })
 
 const getWeather = (location) => {
-    
+
     return new Promise((resolve, reject) => {
         axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json?access_token=${process.env.MAPBOX_KEY}`)
             .then((response) => {
@@ -35,7 +35,7 @@ const getWeather = (location) => {
                 if (res.status !== 200) {
                     throw new Error('DarkSky server error')
                 }
-                resolve(res.data.currently)
+                resolve(res.data)
             })
             .catch((error) => {
                 reject('ERROR' + error.message)
@@ -43,11 +43,11 @@ const getWeather = (location) => {
     })
 }
 
-router.get('/api/weather/:location', function(req, res){
+router.get('/api/weather/:location', function (req, res) {
     let loc = req.params.location;
     getWeather(loc)
         .then((result) => {
-            res.json({"location": loc, "result": result})
+            res.json({ result })
         })
         .catch((error) => {
             res.status(404).send(error.message)
