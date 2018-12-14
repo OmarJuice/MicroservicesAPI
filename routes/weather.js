@@ -23,7 +23,7 @@ const getWeather = (location) => {
                     throw new Error('Mapbox server error')
                 }
                 if (response.data.features.length === 0) {
-                    throw new Error('Address not found')
+                    throw new Error('Location not found')
                 }
                 let loc = {
                     latitude: response.data.features[0].geometry.coordinates[1],
