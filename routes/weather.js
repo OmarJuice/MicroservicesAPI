@@ -38,7 +38,7 @@ const getWeather = (location) => {
                 resolve(res.data)
             })
             .catch((error) => {
-                reject('ERROR' + error.message)
+                reject(error)
             })
     })
 }
