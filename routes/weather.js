@@ -44,10 +44,10 @@ const getWeather = (location) => {
 }
 
 router.get('/api/weather/:location', function (req, res) {
-    let loc = req.params.location;
-    getWeather(loc)
+    let location = req.params.location;
+    getWeather(location)
         .then((result) => {
-            res.json({ result })
+            res.json({ result, location })
         })
         .catch((error) => {
             res.status(404).send(error.message)
