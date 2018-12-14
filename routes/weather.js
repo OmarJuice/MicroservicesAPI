@@ -50,7 +50,7 @@ router.get('/api/weather/:location', function (req, res) {
             res.json({ result, location })
         })
         .catch((error) => {
-            res.status(404).send({ error })
+            res.status(404).json({ error })
         })
 })
 
