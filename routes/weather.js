@@ -42,7 +42,14 @@ const getWeather = (location) => {
             })
     })
 }
-
+const getWeatherFromCoords = (lat, long) => {
+    return axios.get(`https://api.darksky.net/forecast/${process.env.DARK_SKY_KEY}/${lat},${long}`)
+        .then((res) => {
+            return res
+        }).catch((e) => {
+            throw new Error(e)
+        })
+}
 router.get('/api/weather/:location', function (req, res) {
     let location = req.params.location;
     getWeather(location)
@@ -52,6 +59,17 @@ router.get('/api/weather/:location', function (req, res) {
         .catch((error) => {
             res.status(404).json({ error })
         })
+})
+router.get('/api/weathercoords/', function (req, res) {
+    let lat = req.query.latitude
+    let long = req.query.longitude
+    getWeatherFromCoords(lat, long)
+        .then((result) => {
+            res.json(result.data);
+        }).catch((e) => {
+            res.status(404).send(e)
+        })
+
 })
 
 
