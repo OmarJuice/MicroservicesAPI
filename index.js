@@ -8,12 +8,12 @@ const multer = require('multer');
 const upload = multer();
 const dotenv = require('dotenv').config();
 const fs = require('fs');
-
+const axios = require('axios')
 const env = process.env.NODE_ENV || 'development';
 let mongouri;
-if(env === 'test'){
+if (env === 'test') {
     mongouri = process.env.MONGO_URI_TEST
-}else{
+} else {
     mongouri = process.env.MONGO_URI
 }
 
@@ -27,13 +27,11 @@ const parserRoutes = require('./routes/parser');
 const poemRoutes = require('./routes/poem')
 const weatherRoutes = require('./routes/weather')
 
-//NOTES-----=
-// send status numbers
 
 
 
 
-mongoose.connect(mongouri, { useNewUrlParser: true }).then(() =>{ console.log('Connected')}).catch((err) => console.log(err))
+mongoose.connect(mongouri, { useNewUrlParser: true }).then(() => { console.log('Connected') }).catch((err) => console.log(err))
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,7 +39,7 @@ app.use(bodyParser.json())
 app.use((req, res, next) => {
     if (process.env.DATABASE != 'local') {
         let now = new Date().toString();
-        now=now.substr(0, 24)
+        now = now.substr(0, 24)
         let log =
             `-------------------------------------------------------
     ${now}: ${req.method} ${req.url} | PARAMS: ${JSON.stringify(req.params, undefined, 2)} | BODY: ${JSON.stringify(req.body, undefined, 2)}`
@@ -51,10 +49,10 @@ app.use((req, res, next) => {
             }
         })
         next();
-    }else{
+    } else {
         next()
     }
-    
+
 })
 
 app.get('/', function (req, res) {
@@ -73,7 +71,17 @@ app.use(weatherRoutes);
 app.get(`/server/log/${process.env.LOG}`, function (req, res) {
     res.sendFile(__dirname + '/server.log')
 })
+
+//server pinging
+const requestExerciseTracker = setInterval(() => {
+    axios.get('https://exercise-tracker-oj.herokuapp.com/')
+        .then((res) => {
+        })
+        .catch((e) => {
+            console.log(e);
+        })
+}, 1440000)
 app.listen(process.env.PORT, function () {
     console.log('Server init')
 })
-module.exports = {app}
+module.exports = { app }
